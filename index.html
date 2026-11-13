@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="TalentForge - Global Corporate Recruitment & Careers Platform. Filterable job opportunities, expandable position details, and accessible multi-stage application workflows.">
+  <meta name="keywords" content="careers, job application, frontend engineer, software engineering jobs, remote careers, recruitment platform">
+  <meta name="author" content="TalentForge Careers">
+  <title>TalentForge | Corporate Recruitment & Career Portal</title>
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6.5.1 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- Accessible Skip Navigation Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- =========================================================================
+       Navigation Header
+       ========================================================================= -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <nav class="navbar" aria-label="Main Navigation">
+        <!-- Brand Logo -->
+        <a href="index.html" class="brand-logo" aria-label="TalentForge Homepage">
+          <div class="brand-icon">
+            <i class="fa-solid fa-briefcase"></i>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">TalentForge</span>
+            <span class="brand-subtitle">Recruitment Hub</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <ul class="nav-links" role="menubar">
+          <li role="none"><a href="#jobs-section" class="nav-link active" role="menuitem">Explore Positions</a></li>
+          <li role="none"><a href="#culture-section" class="nav-link" role="menuitem">Culture & Perks</a></li>
+          <li role="none"><a href="#process-section" class="nav-link" role="menuitem">Hiring Process</a></li>
+        </ul>
+
+        <!-- Navigation Actions -->
+        <div class="nav-actions">
+          <!-- Saved Jobs Button -->
+          <button class="btn-icon-nav" id="btnOpenSaved" title="Saved Jobs" aria-label="View Saved Jobs">
+            <i class="fa-regular fa-bookmark"></i>
+            <span class="badge-count" id="bookmarkCountBadge">0</span>
+          </button>
+
+          <!-- My Applications Tracker -->
+          <button class="btn-nav-tracker" id="btnOpenTracker" title="My Applications Tracker" aria-label="View Submitted Applications">
+            <i class="fa-solid fa-clipboard-check" style="color:var(--primary-600);"></i>
+            <span>My Applications</span>
+            <span class="badge-count" id="trackerCountBadge">1</span>
+          </button>
+
+          <!-- Theme Toggle (Dark / Light) -->
+          <button class="btn-icon-nav" id="themeToggle" title="Toggle Theme" aria-label="Switch between light and dark mode">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle navigation menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-drawer" id="mobileNavDrawer" aria-label="Mobile Navigation">
+      <a href="#jobs-section" class="nav-link" onclick="document.getElementById('mobileNavDrawer').classList.remove('active')">Explore Positions</a>
+      <a href="#culture-section" class="nav-link" onclick="document.getElementById('mobileNavDrawer').classList.remove('active')">Culture & Perks</a>
+      <a href="#process-section" class="nav-link" onclick="document.getElementById('mobileNavDrawer').classList.remove('active')">Hiring Process</a>
+      <a href="javascript:void(0)" class="nav-link" onclick="window.ApplicationWorkflow.openModal('applicationsModal'); document.getElementById('mobileNavDrawer').classList.remove('active')">My Applications</a>
+      <a href="javascript:void(0)" class="nav-link" onclick="window.ApplicationWorkflow.openModal('savedJobsModal'); document.getElementById('mobileNavDrawer').classList.remove('active')">Saved Jobs</a>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       Main Content Container
+       ========================================================================= -->
+  <main id="main-content">
+
+    <!-- Hero Banner Section -->
+    <section class="hero-section" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-pill">
+            <span class="pulse-dot"></span>
+            <span>We are hiring globally • 12 Active openings</span>
+          </div>
+          <h1 id="hero-title" class="hero-title">
+            Build the Future of <span class="gradient-text">Enterprise Tech</span>
+          </h1>
+          <p class="hero-subtitle">
+            Join a mission-driven team engineering high-scale distributed systems, enterprise design architectures, and autonomous AI infrastructure. Transparent compensation, remote flexibility, and comprehensive healthcare.
+          </p>
+        </div>
+
+        <!-- Metrics Dashboard Strip -->
+        <div class="metrics-strip" id="platformMetrics" role="region" aria-label="Company Key Metrics">
+          <!-- Rendered dynamically from data.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Interactive Search & Filter Console
+         ======================================================================= -->
+    <section class="filter-hub" id="jobs-section" aria-label="Job Search and Filters">
+      <div class="container">
+        <div class="filter-panel">
+          <!-- Primary Filter Row -->
+          <div class="search-primary-row">
+            <!-- Keyword Search -->
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+              <input 
+                type="text" 
+                id="jobSearchInput" 
+                class="search-input" 
+                placeholder="Search by title, skill, or keyword (e.g. React, Staff, AWS)..." 
+                aria-label="Search job listings"
+                autocomplete="off"
+              >
+              <button type="button" class="btn-clear-search" id="btnClearSearch" aria-label="Clear search input">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+
+            <!-- Department Filter -->
+            <select id="filterDepartment" class="filter-select" aria-label="Filter by department">
+              <option value="all">All Departments</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Design">Product & Design</option>
+              <option value="Data & AI">Data & AI</option>
+              <option value="Product">Product Management</option>
+              <option value="Security">Security & DevSecOps</option>
+              <option value="Marketing">Growth & Marketing</option>
+              <option value="People & HR">People & Culture</option>
+            </select>
+
+            <!-- Work Mode Filter -->
+            <select id="filterWorkMode" class="filter-select" aria-label="Filter by work mode">
+              <option value="all">All Work Modes</option>
+              <option value="Remote">Remote</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="On-site">On-site</option>
+            </select>
+
+            <!-- Advanced Filters Toggle -->
+            <button type="button" class="btn-toggle-advanced" id="btnToggleAdvanced" aria-expanded="false" aria-controls="secondaryFiltersRow">
+              <i class="fa-solid fa-sliders"></i>
+              <span>Filters</span>
+            </button>
+          </div>
+
+          <!-- Secondary Collapsible Filters Row -->
+          <div class="secondary-filters-row" id="secondaryFiltersRow">
+            <!-- Experience Filter -->
+            <select id="filterExperience" class="filter-select" aria-label="Filter by experience level">
+              <option value="all">All Experience Levels</option>
+              <option value="Entry-level">Entry-level (0-2 yrs)</option>
+              <option value="Mid-level">Mid-level (3-5 yrs)</option>
+              <option value="Senior">Senior (5+ yrs)</option>
+              <option value="Lead & Staff">Lead & Staff (7+ yrs)</option>
+            </select>
+
+            <!-- Job Type Filter -->
+            <select id="filterJobType" class="filter-select" aria-label="Filter by employment type">
+              <option value="all">All Job Types</option>
+              <option value="Full-time">Full-time</option>
+              <option value="Contract">Contract</option>
+              <option value="Internship">Internship</option>
+            </select>
+
+            <!-- Minimum Salary Slider -->
+            <div class="salary-slider-group">
+              <div class="salary-label-row">
+                <span>Minimum Salary Filter:</span>
+                <span id="salaryValueDisplay" style="color:var(--primary-600); font-weight:700;">$0k+</span>
+              </div>
+              <input 
+                type="range" 
+                id="salaryRange" 
+                class="salary-slider" 
+                min="0" 
+                max="220000" 
+                step="20000" 
+                value="0" 
+                aria-label="Filter by minimum compensation threshold"
+              >
+            </div>
+
+            <!-- Sort By -->
+            <select id="filterSort" class="filter-select" aria-label="Sort job listings">
+              <option value="featured">Featured First</option>
+              <option value="salary-high">Salary: High to Low</option>
+              <option value="salary-low">Salary: Low to High</option>
+              <option value="recent">Most Recent</option>
+              <option value="title-asc">Role Title: A - Z</option>
+            </select>
+
+            <!-- Reset Filters -->
+            <button type="button" class="btn-reset-filters" id="btnResetFilters">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span>Reset</span>
+            </button>
+          </div>
+
+          <!-- Quick Filter Tags -->
+          <div class="quick-tags-row" role="group" aria-label="Quick filters">
+            <span class="quick-tag-label">Quick Filters:</span>
+            <button type="button" class="pill-tag active" data-tag="all">All Roles</button>
+            <button type="button" class="pill-tag" data-tag="remote-only"><i class="fa-solid fa-house-laptop"></i> Remote Only</button>
+            <button type="button" class="pill-tag" data-tag="urgent-hire"><i class="fa-solid fa-bolt"></i> Urgent Hire</button>
+            <button type="button" class="pill-tag" data-tag="lead-roles"><i class="fa-solid fa-crown"></i> Lead & Staff</button>
+            <button type="button" class="pill-tag" data-tag="entry-level"><i class="fa-solid fa-seedling"></i> Early Career</button>
+            <button type="button" class="pill-tag" data-tag="engineering"><i class="fa-solid fa-code"></i> Engineering</button>
+          </div>
+        </div>
+
+        <!-- Results Header Bar -->
+        <div class="results-header-bar">
+          <div class="results-count" id="resultsCount" aria-live="polite">
+            Showing <span>12</span> of 12 open positions
+          </div>
+
+          <!-- Grid vs List View Controls -->
+          <div class="view-controls">
+            <div class="view-toggle-group" role="group" aria-label="Change layout view">
+              <button type="button" class="btn-view-toggle active" id="btnGridView" title="Grid View" aria-label="Grid View">
+                <i class="fa-solid fa-grip"></i>
+              </button>
+              <button type="button" class="btn-view-toggle" id="btnListView" title="List View" aria-label="List View">
+                <i class="fa-solid fa-list"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- =====================================================================
+             Job Listings Grid / List View
+             ===================================================================== -->
+        <div class="jobs-container grid-view" id="jobsContainer" role="region" aria-label="Available job openings">
+          <!-- Rendered dynamically from data.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         Company Culture & Total Rewards Section
+         ======================================================================= -->
+    <section class="culture-section" id="culture-section" aria-labelledby="culture-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-pill">Why TalentForge</span>
+          <h2 id="culture-title" class="section-title">Invested in Your Growth, Health & Future</h2>
+          <p class="section-subtitle">
+            We believe extraordinary software is created by empowered, diverse teams that have the autonomy, resources, and peace of mind to do their best work.
+          </p>
+        </div>
+
+        <div class="perks-grid" id="perksContainer">
+          <!-- Rendered dynamically from data.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- =======================================================================
+         4-Stage Transparent Hiring Process
+         ======================================================================= -->
+    <section class="process-section" id="process-section" aria-labelledby="process-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-pill">Candidate Experience</span>
+          <h2 id="process-title" class="section-title">Transparent & Respectful Hiring</h2>
+          <p class="section-subtitle">
+            No endless hoops or uncompensated take-home tests. We respect your craft with prompt feedback guaranteed at every milestone.
+          </p>
+        </div>
+
+        <div class="process-grid">
+          <div class="process-card">
+            <div class="process-step-num">01</div>
+            <h3 class="process-card-title">Application & Resume Screen</h3>
+            <p class="process-card-desc">Review by our technical talent partner within 48 hours. Clear confirmation email with tracking ID.</p>
+          </div>
+          <div class="process-card">
+            <div class="process-step-num">02</div>
+            <h3 class="process-card-title">Recruiter Discovery Chat</h3>
+            <p class="process-card-desc">30-minute informal conversation to discuss your background, aspirations, compensation expectations, and questions.</p>
+          </div>
+          <div class="process-card">
+            <div class="process-step-num">03</div>
+            <h3 class="process-card-title">Technical Spike & Architecture</h3>
+            <p class="process-card-desc">Collaborative live system design or pairing session with senior engineers. Real-world problems, zero LeetCode trivia.</p>
+          </div>
+          <div class="process-card">
+            <div class="process-step-num">04</div>
+            <h3 class="process-card-title">Executive Chat & Formal Offer</h3>
+            <p class="process-card-desc">Discussion with engineering leadership followed by a transparent, competitive offer breakdown including equity and perks.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       Site Footer
+       ========================================================================= -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-top-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="brand-logo" style="margin-bottom: 8px;">
+            <div class="brand-icon">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <span class="brand-title">TalentForge</span>
+          </a>
+          <p>
+            An enterprise recruitment platform connecting top-tier software engineers, architects, designers, and AI researchers with high-impact global careers.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Departments</h5>
+          <ul class="footer-links">
+            <li><a href="#jobs-section">Engineering</a></li>
+            <li><a href="#jobs-section">Product Design</a></li>
+            <li><a href="#jobs-section">Artificial Intelligence</a></li>
+            <li><a href="#jobs-section">Cloud Infrastructure</a></li>
+            <li><a href="#jobs-section">DevSecOps</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Candidate Hub</h5>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="window.ApplicationWorkflow.openModal('applicationsModal')">Application Tracker</a></li>
+            <li><a href="javascript:void(0)" onclick="window.ApplicationWorkflow.openModal('savedJobsModal')">Saved Roles</a></li>
+            <li><a href="#process-section">Hiring Standards</a></li>
+            <li><a href="#culture-section">Total Rewards & Benefits</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Compliance</h5>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)">Equal Opportunity Employer</a></li>
+            <li><a href="javascript:void(0)">WCAG 2.1 AA Accessibility</a></li>
+            <li><a href="javascript:void(0)">Candidate Privacy Policy</a></li>
+            <li><a href="javascript:void(0)">Applicant Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 TalentForge Technologies, Inc. All rights reserved. Equal Opportunity Employer.</p>
+        <p>Built with Accessible Form Architecture • WAI-ARIA Certified</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       MODAL 1: Expandable Job Details Modal / Drawer
+       ========================================================================= -->
+  <div class="modal-overlay" id="jobDetailsModal" role="dialog" aria-modal="true" aria-labelledby="detailsDrawerTitle" aria-hidden="true">
+    <div class="drawer-content">
+      <div class="drawer-header">
+        <h3 id="detailsDrawerTitle" style="font-size: 1.4rem; padding-right: 40px;">Position Details</h3>
+        <button type="button" class="btn-close-modal" data-close-modal="jobDetailsModal" aria-label="Close job details">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="drawer-body" id="detailsDrawerBody">
+        <!-- Injected via JavaScript -->
+      </div>
+      <div class="drawer-footer">
+        <button type="button" class="btn-bookmark" id="btnBookmarkFromDetails" title="Save Job">
+          <i class="fa-regular fa-bookmark"></i>
+        </button>
+        <div style="display:flex; gap:12px;">
+          <button type="button" class="btn-secondary-outline" data-close-modal="jobDetailsModal">
+            Close
+          </button>
+          <button type="button" class="btn-primary-apply" id="btnApplyFromDetails">
+            <i class="fa-solid fa-paper-plane"></i> Apply for this Role
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: Comprehensive Job Application Wizard (Form Architecture)
+       ========================================================================= -->
+  <div class="modal-overlay" id="applicationModal" role="dialog" aria-modal="true" aria-labelledby="modalJobTitle" aria-hidden="true">
+    <div class="drawer-content application-modal-content">
+      <!-- Modal Header -->
+      <div class="drawer-header">
+        <div>
+          <span style="font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: var(--primary-600); letter-spacing: 0.05em;">Career Application</span>
+          <h3 id="modalJobTitle" style="font-size: 1.35rem; margin-top: 2px;">Job Application</h3>
+          <p id="modalJobDept" style="font-size: 0.88rem; color: var(--text-secondary);"></p>
+        </div>
+        <button type="button" class="btn-close-modal" data-close-modal="applicationModal" aria-label="Close application form">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Application Form Wizard Container -->
+      <div id="wizardFormContainer">
+        <!-- Accessible Stepper Progress Bar -->
+        <div class="wizard-stepper" role="tablist" aria-label="Application Progress Steps">
+          <div class="stepper-track-bar">
+            <div class="stepper-progress-fill" id="stepperFill"></div>
+          </div>
+
+          <div class="step-indicator active" id="step-indicator-1">
+            <div class="step-circle">1</div>
+            <span class="step-title">Identity</span>
+          </div>
+          <div class="step-indicator" id="step-indicator-2">
+            <div class="step-circle">2</div>
+            <span class="step-title">Experience</span>
+          </div>
+          <div class="step-indicator" id="step-indicator-3">
+            <div class="step-circle">3</div>
+            <span class="step-title">Resume</span>
+          </div>
+          <div class="step-indicator" id="step-indicator-4">
+            <div class="step-circle">4</div>
+            <span class="step-title">Submit</span>
+          </div>
+        </div>
+
+        <!-- Form Panels -->
+        <form id="applicationWizardForm" novalidate>
+          <div class="wizard-form-body">
+            
+            <!-- STEP 1: Personal & Contact Information -->
+            <fieldset class="step-panel active" id="step-panel-1" aria-labelledby="step-1-legend">
+              <legend id="step-1-legend" class="drawer-section-title" style="margin-bottom: 20px;">
+                <i class="fa-solid fa-user-check" style="color:var(--primary-600);"></i> Step 1: Candidate Identity & Contact
+              </legend>
+
+              <div class="form-group-grid">
+                <div class="form-field">
+                  <label for="candidateFirstName" class="form-label">
+                    First Name <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input type="text" id="candidateFirstName" class="form-input" placeholder="e.g. Eleanor" required autocomplete="given-name">
+                  <span class="field-error-msg"></span>
+                </div>
+
+                <div class="form-field">
+                  <label for="candidateLastName" class="form-label">
+                    Last Name <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input type="text" id="candidateLastName" class="form-input" placeholder="e.g. Sterling" required autocomplete="family-name">
+                  <span class="field-error-msg"></span>
+                </div>
+              </div>
+
+              <div class="form-group-grid">
+                <div class="form-field">
+                  <label for="candidateEmail" class="form-label">
+                    Email Address <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input type="email" id="candidateEmail" class="form-input" placeholder="eleanor.sterling@domain.com" required autocomplete="email">
+                  <span class="field-error-msg"></span>
+                  <span class="field-helper">We will send confirmation and application updates here.</span>
+                </div>
+
+                <div class="form-field">
+                  <label for="candidatePhone" class="form-label">
+                    Phone Number <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input type="tel" id="candidatePhone" class="form-input" placeholder="+1 (555) 019-2834" required autocomplete="tel">
+                  <span class="field-error-msg"></span>
+                  <span class="field-helper">Include country code for international candidates.</span>
+                </div>
+              </div>
+
+              <div class="form-group-grid">
+                <div class="form-field">
+                  <label for="candidateLocation" class="form-label">
+                    Current Location (City, Country) <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input type="text" id="candidateLocation" class="form-input" placeholder="e.g. San Francisco, US or London, UK" required>
+                  <span class="field-error-msg"></span>
+                </div>
+
+                <div class="form-field">
+                  <label for="candidateWorkAuth" class="form-label">
+                    Work Authorization <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <select id="candidateWorkAuth" class="form-select-field" required>
+                    <option value="">Select authorization status...</option>
+                    <option value="Citizen / Permanent Resident">Citizen / Permanent Resident</option>
+                    <option value="Valid Work Visa (No transfer required)">Valid Work Visa (No transfer required)</option>
+                    <option value="Requires Visa Sponsorship">Requires Visa Sponsorship</option>
+                    <option value="Authorized to work in EU/UK">Authorized to work in EU/UK</option>
+                    <option value="Other / Contractor">Other / Independent Contractor</option>
+                  </select>
+                  <span class="field-error-msg"></span>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- STEP 2: Professional Profile & Links -->
+            <fieldset class="step-panel" id="step-panel-2" aria-labelledby="step-2-legend">
+              <legend id="step-2-legend" class="drawer-section-title" style="margin-bottom: 20px;">
+                <i class="fa-solid fa-briefcase" style="color:var(--primary-600);"></i> Step 2: Experience & Online Footprint
+              </legend>
+
+              <div class="form-group-grid">
+                <div class="form-field">
+                  <label for="candidateCurrentTitle" class="form-label">
+                    Current Job Title <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input type="text" id="candidateCurrentTitle" class="form-input" placeholder="e.g. Senior Frontend Developer" required>
+                  <span class="field-error-msg"></span>
+                </div>
+
+                <div class="form-field">
+                  <label for="candidateExpYears" class="form-label">
+                    Years of Relevant Experience <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <select id="candidateExpYears" class="form-select-field" required>
+                    <option value="">Select experience bracket...</option>
+                    <option value="0 - 1 year">0 - 1 year (Early Career / Intern)</option>
+                    <option value="1 - 3 years">1 - 3 years</option>
+                    <option value="3 - 5 years">3 - 5 years</option>
+                    <option value="5 - 8 years">5 - 8 years</option>
+                    <option value="8+ years">8+ years (Senior / Principal)</option>
+                  </select>
+                  <span class="field-error-msg"></span>
+                </div>
+              </div>
+
+              <div class="form-group-grid">
+                <div class="form-field">
+                  <label for="candidateLinkedin" class="form-label">
+                    LinkedIn Profile URL <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input type="url" id="candidateLinkedin" class="form-input" placeholder="https://linkedin.com/in/yourprofile" required>
+                  <span class="field-error-msg"></span>
+                </div>
+
+                <div class="form-field">
+                  <label for="candidatePortfolio" class="form-label">
+                    GitHub / Portfolio URL
+                  </label>
+                  <input type="url" id="candidatePortfolio" class="form-input" placeholder="https://github.com/yourhandle">
+                  <span class="field-error-msg"></span>
+                </div>
+              </div>
+
+              <div class="form-group-grid">
+                <div class="form-field">
+                  <label for="candidateStartDate" class="form-label">
+                    Earliest Start Date / Notice Period <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <select id="candidateStartDate" class="form-select-field" required>
+                    <option value="">Select availability...</option>
+                    <option value="Immediately (Available now)">Immediately (Available now)</option>
+                    <option value="2 Weeks Notice">2 Weeks Notice</option>
+                    <option value="1 Month Notice">1 Month Notice</option>
+                    <option value="2+ Months Notice">2+ Months Notice</option>
+                  </select>
+                  <span class="field-error-msg"></span>
+                </div>
+
+                <div class="form-field">
+                  <label for="candidateSalary" class="form-label">
+                    Desired Annual Compensation (USD)
+                  </label>
+                  <input type="text" id="candidateSalary" class="form-input" placeholder="e.g. $180,000">
+                  <span class="field-helper">Helps our team align quickly on expectations.</span>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- STEP 3: Resume Attachment & Supporting Notes -->
+            <fieldset class="step-panel" id="step-panel-3" aria-labelledby="step-3-legend">
+              <legend id="step-3-legend" class="drawer-section-title" style="margin-bottom: 20px;">
+                <i class="fa-solid fa-file-arrow-up" style="color:var(--primary-600);"></i> Step 3: Resume Attachment & Notes
+              </legend>
+
+              <div class="form-field" style="margin-bottom: 20px;">
+                <label class="form-label">
+                  Resume / Curriculum Vitae <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+
+                <!-- Drag & Drop Upload Zone -->
+                <div class="dropzone-box" id="resumeDropzone" tabindex="0" role="button" aria-label="Upload resume file. Click to browse or drag and drop.">
+                  <input type="file" id="resumeFileInput" class="file-input-hidden" accept=".pdf,.doc,.docx" aria-label="Choose resume file">
+                  <div class="dropzone-icon">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                  </div>
+                  <h4 class="dropzone-title">Click to upload or drag & drop your resume</h4>
+                  <p class="dropzone-subtitle">Supported formats: PDF, DOC, DOCX • Maximum file size: 5 MB</p>
+                </div>
+
+                <!-- Attached File Preview Badge -->
+                <div class="attached-file-preview" id="attachedFilePreview">
+                  <div class="file-info-group">
+                    <div class="file-icon-badge">
+                      <i class="fa-solid fa-file-pdf"></i>
+                    </div>
+                    <div class="file-meta">
+                      <h6 id="previewFileName">Resume.pdf</h6>
+                      <span id="previewFileSize">1.4 MB</span>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-remove-file" id="btnRemoveFile" title="Remove attached file" aria-label="Remove attached file">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+
+                <span class="field-error-msg" id="resumeErrorMsg"></span>
+              </div>
+
+              <!-- Cover Letter / Notes -->
+              <div class="form-field" style="margin-bottom: 20px;">
+                <div class="form-label">
+                  <span>Cover Letter / Pitch to the Hiring Lead (Optional)</span>
+                  <span class="char-counter" id="charCounter">0 / 1500</span>
+                </div>
+                <textarea id="coverLetter" class="form-textarea" rows="4" maxlength="1500" placeholder="Highlight why you're a standout fit for this role, key projects you've delivered, or specific architectural challenges you enjoy tackling..."></textarea>
+                <span class="field-helper">Tell us what excites you about TalentForge and this specific role.</span>
+              </div>
+
+              <div class="form-field">
+                <label for="referralSource" class="form-label">How did you hear about TalentForge?</label>
+                <select id="referralSource" class="form-select-field">
+                  <option value="LinkedIn">LinkedIn</option>
+                  <option value="Employee Referral">Employee Referral</option>
+                  <option value="Google Search">Google Search</option>
+                  <option value="Tech Conference / Meetup">Tech Conference / Meetup</option>
+                  <option value="Direct Website Visit">Direct Website Visit</option>
+                </select>
+              </div>
+            </fieldset>
+
+            <!-- STEP 4: Review & Compliance Submit -->
+            <fieldset class="step-panel" id="step-panel-4" aria-labelledby="step-4-legend">
+              <legend id="step-4-legend" class="drawer-section-title" style="margin-bottom: 20px;">
+                <i class="fa-solid fa-clipboard-check" style="color:var(--primary-600);"></i> Step 4: Review & Compliance Declaration
+              </legend>
+
+              <!-- Injected Review Card -->
+              <div class="review-summary-card" id="reviewSummaryContainer">
+                <!-- Dynamically populated via JavaScript -->
+              </div>
+
+              <div class="form-field" style="margin-bottom: 20px;">
+                <label for="diversityDeclaration" class="form-label">
+                  Voluntary Equal Opportunity Declaration
+                </label>
+                <select id="diversityDeclaration" class="form-select-field">
+                  <option value="Prefer not to say">Prefer not to say</option>
+                  <option value="Man">Man</option>
+                  <option value="Woman">Woman</option>
+                  <option value="Non-binary / Gender diverse">Non-binary / Gender diverse</option>
+                </select>
+                <span class="field-helper">TalentForge is committed to building an equitable workplace. Information is aggregate and anonymized.</span>
+              </div>
+
+              <div class="form-field" style="margin-top: 16px;">
+                <label style="display: flex; align-items: flex-start; gap: 10px; cursor: pointer;">
+                  <input type="checkbox" id="candidateConsent" style="margin-top: 4px; accent-color: var(--primary-600); width: 18px; height: 18px;" required>
+                  <span style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.45;">
+                    I hereby certify that all information submitted is accurate and true to the best of my knowledge. I authorize TalentForge to process my personal data in accordance with the Candidate Privacy Policy for recruitment assessment purposes. <span class="required-mark" aria-hidden="true">*</span>
+                  </span>
+                </label>
+                <span class="field-error-msg" id="consentErrorMsg"></span>
+              </div>
+            </fieldset>
+
+          </div>
+
+          <!-- Wizard Footer Navigation -->
+          <div class="wizard-footer-nav">
+            <button type="button" class="btn-secondary-outline" id="btnPrevStep" style="visibility: hidden;">
+              <i class="fa-solid fa-arrow-left"></i> Previous Step
+            </button>
+
+            <div style="display: flex; gap: 10px;">
+              <button type="button" class="btn-primary-apply" id="btnNextStep">
+                Next Step <i class="fa-solid fa-arrow-right"></i>
+              </button>
+
+              <button type="submit" class="btn-primary-apply" id="btnSubmitApp" style="display: none;">
+                <i class="fa-solid fa-paper-plane"></i> Submit Application
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- SUCCESS SCREEN (Application Confirmation) -->
+      <div id="applicationSuccessScreen" class="success-screen" style="display: none;">
+        <div class="success-badge-icon">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h3 style="font-size: 1.8rem; margin-bottom: 8px;">Application Received!</h3>
+        <p style="color: var(--text-secondary); max-width: 540px; margin: 0 auto;">
+          Thank you, <strong id="successCandidateName">Candidate</strong>! Your application has been logged into our recruitment pipeline and routed to the hiring committee.
+        </p>
+
+        <div>
+          <span style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-tertiary); margin-top: 20px;">YOUR APPLICATION REFERENCE NUMBER</span>
+          <div class="application-ref-tag" id="successReferenceId">TF-2026-0000</div>
+        </div>
+
+        <!-- Next Steps Timeline -->
+        <div class="application-timeline-preview">
+          <div class="timeline-step-item done">
+            <div class="timeline-step-title">Application Submitted</div>
+            <div class="timeline-step-desc">Received into our applicant tracking system.</div>
+          </div>
+          <div class="timeline-step-item current">
+            <div class="timeline-step-title">Recruiter Review (In Progress)</div>
+            <div class="timeline-step-desc">Target turnaround: within 48 business hours.</div>
+          </div>
+          <div class="timeline-step-item">
+            <div class="timeline-step-title">Team Interview & Assessment</div>
+            <div class="timeline-step-desc">Invitation scheduled directly with our engineering leads.</div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 12px;">
+          <button type="button" class="btn-primary-apply" id="btnViewInTracker">
+            <i class="fa-solid fa-clipboard-check"></i> View in My Applications
+          </button>
+          <button type="button" class="btn-secondary-outline" data-close-modal="applicationModal">
+            Done & Browse More Roles
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: My Applications Management Drawer
+       ========================================================================= -->
+  <div class="modal-overlay" id="applicationsModal" role="dialog" aria-modal="true" aria-labelledby="applicationsModalTitle" aria-hidden="true">
+    <div class="drawer-content" style="max-width: 700px;">
+      <div class="drawer-header">
+        <div>
+          <span style="font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: var(--primary-600); letter-spacing: 0.05em;">Candidate Portal</span>
+          <h3 id="applicationsModalTitle" style="font-size: 1.35rem; margin-top: 2px;">My Submitted Applications</h3>
+        </div>
+        <button type="button" class="btn-close-modal" data-close-modal="applicationsModal" aria-label="Close applications modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="applications-drawer-list" id="applicationsListContainer">
+          <!-- Rendered dynamically from form.js -->
+        </div>
+      </div>
+
+      <div class="drawer-footer" style="justify-content: flex-end;">
+        <button type="button" class="btn-secondary-outline" data-close-modal="applicationsModal">
+          Close Portal
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 4: Saved Jobs Bookmark Drawer
+       ========================================================================= -->
+  <div class="modal-overlay" id="savedJobsModal" role="dialog" aria-modal="true" aria-labelledby="savedJobsModalTitle" aria-hidden="true">
+    <div class="drawer-content" style="max-width: 650px;">
+      <div class="drawer-header">
+        <div>
+          <span style="font-size: 0.8rem; text-transform: uppercase; font-weight: 700; color: var(--primary-600); letter-spacing: 0.05em;">Saved Opportunities</span>
+          <h3 id="savedJobsModalTitle" style="font-size: 1.35rem; margin-top: 2px;">Bookmarked Jobs</h3>
+        </div>
+        <button type="button" class="btn-close-modal" data-close-modal="savedJobsModal" aria-label="Close saved jobs modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="drawer-body">
+        <div class="saved-jobs-list" id="savedJobsListContainer">
+          <!-- Rendered dynamically from form.js -->
+        </div>
+      </div>
+
+      <div class="drawer-footer" style="justify-content: flex-end;">
+        <button type="button" class="btn-secondary-outline" data-close-modal="savedJobsModal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accessible Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- JavaScript Modules -->
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/form.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
